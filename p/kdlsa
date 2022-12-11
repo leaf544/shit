@@ -1,0 +1,41 @@
+(define-derived-mode terms-mode tabulated-list-mode "Terms"
+  nil
+  nil
+  )
+
+
+(defun terms--generate-entries (file)
+  (let ((entries '())
+	(tlist (seq-remove
+		#'(lambda (o)
+		    (member (car o) ignore-list))
+		(get-common-words-in-file file))))
+    (dolist (word tlist)
+      (add-to-list 'entries
+		   `(,(concat (car word) (make-temp-name "ks")) [,(car word) ,(cdr word)])
+		   )
+      )
+    entries)
+  )
+
+(defun terms ()
+  (interactive)
+  (with-current-buffer
+      (switch-to-buffer-other-window
+       (generate-new-buffer-name "*Terms*"))
+    (terms-mode)
+    (setq-local tabulated-list-format
+		[
+		 ("Term" 10 nil)
+		 ]
+		)
+    (message "ok")
+    (setq-local tabulated-list-entries
+		(terms--generate-entries (buffer-file-name))
+		)
+    (message "ni")
+    (tabulated-list-init-header)
+    (tabulated-list-print)
+    ))
+
+

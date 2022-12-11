@@ -1,0 +1,54 @@
+(defalias 'cr 'completing-read)
+
+(defun l-set-default (size)
+  (interactive "M")
+  (set-face-attribute 'default nil :height (string-to-number size)))
+
+(defun espeak (say)
+  (interactive "M")
+  (start-process "espeak" nil "espeak" (string-replace " " "_" say)))
+
+(add-to-list 'exec-path "C:/Users/leaf/Downloads/nircmd-x64/nircmdc.exe")
+
+(defun discord-emote ()
+  (interactive)
+  (let* ((dir (expand-file-name "~/emotes/"))
+	 (emote (cr "Emote: " (directory-files dir
+					       nil
+					       directory-regexp)))
+	 (final (concat dir emote)))
+    
+    (async-shell-command (concat "nircmdc clipboard copyimage " dir emote) nil nil)))
+
+(defalias 'de #'discord-emote)
+
+(defun get-meme ()
+  (interactive)
+  (let* ((dir (expand-file-name "~/memes/"))
+	 (meme (cr "Meme: " (directory-files dir
+					     nil
+					     directory-regexp)))
+	 (final (concat dir meme)))
+    
+    (async-shell-command (concat "nircmdc clipboard copyimage " dir meme) nil nil)))
+
+(defalias 'gm #'get-meme)
+
+(provide 'leaf-amusements)
+
+;; (defmacro print-name-from-language (language)
+;;   (let ((name (symbol-name ,language)))
+;;     `(message name)))
+
+(defmacro print-from-language (lang)
+  `(message (symbol-name ,(quote lang))))
+
+;; (setf lang (quote c++))
+;; `(message (symbol-name ,lang))
+
+
+;; (defun print-from-lang (sym)
+;;   (message (symbol-name sym)))
+
+
+(print-from-language 'python)

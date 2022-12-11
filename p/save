@@ -1,0 +1,760 @@
+; --- * leaf-mark-open.el * ---
+
+;; Created: 7/7/2022
+
+(require 'f)
+
+(defvar mark-file (concat user-emacs-directory "marked")
+  "Where marked files are stored.")
+
+(defun get-living-buffers ()
+  "Return a list of file buffers"
+  (seq-filter
+   (lambda (b)
+     (buffer-file-name b))
+   (buffer-list)))
+
+(defun get-window-buffers ()
+  "Return a list of window buffers"
+  (seq-filter
+   (lambda (elt)
+     (memq elt (mapcar 'window-buffer (window-list))))
+   (buffer-list)))
+
+(defun write-to-marked-file (obj append)
+  (write-region obj nil mark-file append))
+
+(defun retrieve-marked (list)
+  (mapc #'find-file list)
+  (write-to-marked-file "" nil)) 
+
+;; TODO: Figure this out later, this is meant to be glorious
+;; NOTE: I think refun will work now, problem was from mark open's default procedure
+
+;; (defmacro refun (name args &rest body)
+;;   `(defun ,name (,@args)
+;;      (interactive "i")
+;;      ,@body
+;;      (and current-prefix-arg (restart-emacs))))
+
+(defun leaf/mark-buffer-file (obj)
+  (interactive "i")
+  (write-to-marked-file (concat (buffer-file-name obj) "\n") t)
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-directory ()
+  ;; Change definition
+  (interactive)
+  (write-to-marked-file (concat default-directory "\n") t)
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-living-buffers ()
+  (interactive)
+  (mapc #'leaf/mark-buffer-file (get-living-buffers))
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-window-buffers ()
+  (interactive)
+  (mapc #'leaf/mark-buffer-file (get-window-buffers))
+  (and current-prefix-arg (restart-emacs)))
+
+(defun mark-open-procedure-default-function ()
+  (let ((list
+	 (split-string (f-read-text mark-file) "\n" t)))
+    ;; (if list
+    ;; 	(retrieve-marked list))
+    (and list
+	 (retrieve-marked list))
+    ))
+
+(defvar mark-open-procedure
+  #'mark-open-procedure-default-function
+  "Standard instructions for retrieving marked files")
+
+(provide 'leaf-mark-open)
+;; --- * leaf-mark-open.el * ---
+
+;; Created: 7/7/2022
+
+(require 'f)
+
+(defvar mark-file (concat user-emacs-directory "marked")
+  "Where marked files are stored.")
+
+(defun get-living-buffers ()
+  "Return a list of file buffers"
+  (seq-filter
+   (lambda (b)
+     (buffer-file-name b))
+   (buffer-list)))
+
+(defun get-window-buffers ()
+  "Return a list of window buffers"
+  (seq-filter
+   (lambda (elt)
+     (memq elt (mapcar 'window-buffer (window-list))))
+   (buffer-list)))
+
+(defun write-to-marked-file (obj append)
+  (write-region obj nil mark-file append))
+
+(defun retrieve-marked (marked)
+  (mapc #'find-file marked)
+  (write-to-marked-file "" nil)) 
+
+;; TODO: Figure this out later, this is meant to be glorious
+;; NOTE: I think refun will work now, problem was from mark open's default procedure
+
+(defmacro refun (name args &rest body)
+  `(defun ,name (,@args)
+     (interactive "i")
+     ,@body
+     (and current-prefix-arg (restart-emacs))))
+
+(refun leaf/mark-buffer-file (obj)
+       (write-to-marked-file (concat (buffer-file-name obj) "\n") t))
+
+(refun leaf/mark-directory (&rest obj)
+       (write-to-marked-file (concat default-directory "\n") t))
+
+(refun leaf/mark-living-buffers (&rest obj)
+       (mapc #'leaf/mark-buffer-file (get-living-buffers)))
+
+(refun leaf/mark-window-buffers (&rest obj)
+       (mapc #'leaf/mark-buffer-file (get-window-buffers)))
+
+(defun mark-open-procedure-default-function ()
+  (let ((marked
+	 (split-string (f-read-text mark-file) "\n")))
+    ;; (if list
+    ;; 	(retrieve-marked list))
+    (and marked
+	 (retrieve-marked marked))
+    ))
+
+(defvar mark-open-procedure
+  #'mark-open-procedure-default-function
+  "Standard instructions for retrieving marked files")
+
+(defalias 'mf #'leaf/mark-buffer-file)
+(defalias 'md #'leaf/mark-directory)
+(defalias 'mlb #'leaf/mark-living-buffers)
+(defalias 'mw #'leaf/mark-window-buffers)
+
+(provide 'leaf-mark-open)
+
+
+
+
+;; --- * leaf-mark-open.el * ---
+
+;; Created: 7/7/2022
+
+(require 'f)
+
+(defvar mark-file (concat user-emacs-directory "marked")
+  "Where marked files are stored.")
+
+(defun get-living-buffers ()
+  "Return a list of file buffers"
+  (seq-filter
+   (lambda (b)
+     (buffer-file-name b))
+   (buffer-list)))
+
+(defun get-window-buffers ()
+  "Return a list of window buffers"
+  (seq-filter
+   (lambda (elt)
+     (memq elt (mapcar 'window-buffer (window-list))))
+   (buffer-list)))
+
+(defun write-to-marked-file (obj append)
+  (write-region obj nil mark-file append))
+
+(defun retrieve-marked (marked)
+  (mapc #'find-file marked)
+  (write-to-marked-file "" nil)) 
+
+;; TODO: Figure this out later, this is meant to be glorious
+;; NOTE: I think refun will work now, problem was from mark open's default procedure
+
+(defmacro refun (name args &rest body)
+  `(defun ,name (,@args)
+     (interactive "i")
+     (progn ,@body)
+     (and current-prefix-arg (restart-emacs))))
+
+(defun leaf/mark-buffer-file (obj)
+  (interactive "i")
+  (write-to-marked-file (concat (buffer-file-name obj) "\n") t))
+
+(defun leaf/mark-directory (obj)
+  (interactive "i")
+  (write-to-marked-file (concat default-directory "\n") t))
+
+(defun leaf/mark-living-buffers (obj)
+  (interactive "i")
+  (mapc #'leaf/mark-buffer-file (get-living-buffers)))
+
+(defun leaf/mark-window-buffers (obj)
+  (interactive "i")
+  (mapc #'leaf/mark-buffer-file (get-window-buffers)))
+
+(defun mark-open-procedure-default-function ()
+  (let ((marked
+	 (split-string (f-read-text mark-file) "\n")))
+    ;; (if list
+    ;; 	(retrieve-marked list))
+    (and marked
+	 (retrieve-marked marked))
+    ))
+
+(defvar mark-open-procedure
+  #'mark-open-procedure-default-function
+  "Standard instructions for retrieving marked files")
+
+(defalias 'mf #'leaf/mark-buffer-file)
+(defalias 'md #'leaf/mark-directory)
+(defalias 'mlb #'leaf/mark-living-buffers)
+(defalias 'mw #'leaf/mark-window-buffers)
+
+(provide 'leaf-mark-open)
+
+(defmacro refun (name args &rest body)
+  `(defun ,name (&optional ,@args)
+     (interactive)
+     (progn
+       ,@body)
+     (and current-prefix-arg (restart-emacs))))
+
+
+
+;; --- * leaf-mark-open.el * ---
+
+;; Created: 7/7/2022
+
+(require 'f)
+
+(defvar mark-file (concat user-emacs-directory "marked")
+  "Where marked files are stored.")
+
+(defun get-living-buffers ()
+  "Return a list of current file buffers"
+  (seq-filter
+   (lambda (b)
+     (buffer-file-name b))
+   (buffer-list)))
+
+(defun get-window-buffers ()
+  "Return a list of current window buffers"
+  (seq-filter
+   (lambda (elt)
+     (memq elt (mapcar 'window-buffer (window-list))))
+   (buffer-list)))
+
+(defun write-to-marked-file (obj append)
+  "Write OBJ to `mark-file', if APPEND is t then append OBJ to
+`mark-file', if APPEND is nil then erase `mark-file' contents and
+write to `mark-file'"
+  (write-region obj nil mark-file append))
+
+(defun retrieve-marked (marked)
+  (mapc #'find-file marked))
+
+(defun leaf/mark-buffer-file (obj)
+  "Mark the current file buffer"
+  (interactive "i")
+  (write-to-marked-file (concat (buffer-file-name obj) "\n") t)
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-directory (obj)
+  "Mark the current `default-directory'"
+  (interactive "i")
+  (write-to-marked-file (concat default-directory "\n") t)
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-living-buffers (obj)
+  "Mark all living buffers, this function uses `get-living-buffers'"
+  (interactive "i")
+  (mapc #'leaf/mark-buffer-file (get-living-buffers))
+  (and current-prefix-arg (restart-emacs)))
+
+(defun leaf/mark-window-buffers (obj)
+  "Mark all living window buffers, this function uses `get-window-buffers'"
+  (interactive "i")
+  (mapc #'leaf/mark-buffer-file (get-window-buffers))
+  (and current-prefix-arg (restart-emacs)))
+
+(defun mark-open-procedure-default-function ()
+  "Default function for `mark-open-procedure'"
+  (let ((marked
+  	 (split-string (f-read-text mark-file) "\n")))
+    (and marked
+	 (retrieve-marked marked)))
+  (write-to-marked-file "" nil))
+
+(defvar mark-open-procedure
+  #'mark-open-procedure-default-function
+  "Standard instructions for retrieving marked files")
+
+(defalias 'mf #'leaf/mark-buffer-file)
+(defalias 'md #'leaf/mark-directory)
+(defalias 'mlb #'leaf/mark-living-buffers)
+(defalias 'mw #'leaf/mark-window-buffers)
+
+(provide 'leaf-mark-open)
+
+
+
+(dolist (e clean-alist)
+  (with-current-buffer (find-file (car e))
+    (dolist (o (cdr e))
+      ;;(dired-do-rename-regexp (car o) NEWNAME &optional ARG WHOLE-NAME)
+      )
+    (kill-buffer (current-buffer))
+    )
+
+  )
+
+(defun clean::create-lambda-form (string)
+  (let ((vector (make-vector (string-width string) 0))
+	(iter 0))
+    (seq-doseq (char string)
+      (setf (aref vector iter) char)
+      (cl-incf iter)
+      )
+    vector)
+  )
+
+(kill-new (format "%s" (clean::create-lambda-form "~/txt/")))
+
+(fset 'dont
+      (kmacro-lambda-form [37 114 32 91 97 45 122 93 46 116 120 116] 0 "%d"))
+
+;;(vconcat (clean::create-lambda-form "[a-z].txt") [return])
+
+(clean::create-lambda-form "~/txt/")
+
+[?% ?r return return]
+
+(fset 'leaf-clean
+      (kmacro-lambda-form [?% ?r] 0 "%d"))
+
+(fset 'fuck
+      (kmacro-lambda-form [
+			   ?* ?%
+			   91 97 45 122 93 46 116 120 116
+			   return
+			   ?R
+			   126 47 116 120 116 47
+			   return
+			   ]
+			  0 "%d"))
+
+
+(defun clean::clean-with-alist (alist)
+  (dolist (e alist)
+    
+    )
+  )
+
+(defmacro construct-kmacro-lambda-form (extension where)
+  `(progn [?* ?% ,@(lambda-form extension) return ?R ,@(lambda-form ,where) return]))
+
+(eval
+	 `(progn
+	    (funcall
+	     (kmacro-lambda-form
+	      (construct-kmacro-lambda-form
+	       ,(car o)
+	       ,(cdr o))
+	      0
+	      "%d")
+	     )
+	    ))
+	    (defun clean::clean-with-alist (alist)
+  (dolist (e clean-alist)
+    (with-current-buffer (find-file (car e))
+      (dolist (o (cdr e))
+	
+	(kill-new (format "%s"
+		(eval
+		 `(construct-kmacro-lambda-form
+		   ,(car o)
+		   ,(cdr o)
+		   )
+		 )))
+	)
+      ;;(kill-buffer (current-buffer))
+      )
+    )
+  )
+       ;; (with-temp-buffer
+     ;;   (insert
+     ;; 	(format "%S" `(fset
+     ;; 		       ',(make-symbol key)
+     ;; 		       #'(lambda ()
+     ;; 			   (interactive)
+     ;; 			   (write::jump-to-write ',write ,path ,format ,extension)))))
+     ;;   (eval-region (point-min) (point-max)))
+     	      
+	      ;; (with-current-buffer
+	      ;; 	  (switch-to-buffer (format-time-string format))
+	      ;; 	(define-key global-map (kbd "C-x C-s")
+	      ;; 	  #'(lambda ()
+	      ;; 	      (write-file (concat path (buffer-name)))
+	      ;; 	      )
+	      ;; 	  )
+	      ;; 	)
+
+
+
+
+(message "behaviour mode: %s" (eval behaviour))
+    (switch-to-buffer
+     (concat
+      (format-time-string format)
+      extension
+      ))
+    
+    ;; (if (null current-prefix-arg)
+    ;; 	(progn
+
+    ;; 	  (and (not (file-exists-p assumed-file))
+    ;; 	       (make-empty-file assumed-file ))
+    ;; 	  (find-file assumed-file)
+    ;; 	  )
+    ;;   (find-file (concat path (car (last (butlast (dirf path) current-prefix-arg))))))
+
+
+    ;; (pcase beh
+    ;;   (nil
+    ;;    (find-file assumed))
+    ;;   (1
+    ;;    (find-file
+    ;; 	(completing-read
+    ;; 	 (concat
+    ;; 	  (capitalize (format "%s" write)) " Title: ")))))
+
+
+;; (defmacro write::make-write-spec (ob)
+;;   `(let (())
+;;      (with-temp-buffer
+;;        (insert
+;; 	'(format "%S" '(fset (intern ,(symbol-name (gensym "write-spec")))
+;; 			     #'(lambda (string)
+;; 				 '(format-spec string
+;; 					       `((?a . (alist-get 'alias ob))
+;; 						 (?p . (alist-get 'path ob))
+;; 						 (?f . (alist-get 'format ob))
+;; 						 (?e . (alist-get 'extension ob))
+;; 						 (?i . (alist-get 'identifier ob))
+;; 						 ))
+;; 				 )
+;; 			     )))
+;;        (message "%s" (buffer-string))
+;;        )
+;;      )
+  
+;;   )
+2
+
+
+
+(defmacro write::make-write-spec (ob)
+  `
+  (let ((code 
+	 "KGZzZXQgCiAgICAgICMnKGxhbWJkYSAoc3RyaW5nKQoJICAoZm9ybWF0LXNwZWMgc3RyaW5nCgkJ
+ICAgICAgIGAoKD9hIC4gLChhbGlzdC1nZXQgJ2FsaWFzIG9iKSkKCQkJICg/cCAuICwoYWxpc3Qt
+Z2V0ICdwYXRoIG9iKSkKCQkJICg/ZiAuICwoYWxpc3QtZ2V0ICdmb3JtYXQgb2IpKQoJCQkgKD9l
+IC4gLChhbGlzdC1nZXQgJ2V4dGVuc2lvbiBvYikpCgkJCSAoP2kgLiAsKGFsaXN0LWdldCAnaWRl
+bnRpZmllciBvYikpCgkJCSApKQoJICApCiAgICAgICkK"
+	 )
+	(func (symbol-name (gensym "write-spec-")))
+	)
+    (with-temp-buffer
+      (insert (base64-decode-string code))
+      (goto-char (point-min))
+      (goto-char 7)
+      (insert (format "'%S" (intern func)))
+      (message "func %s" func)
+      (perform-replace "ob"
+		       ,(format "%S" ob)
+		       nil nil nil)
+      (eval-region (point-min) (point-max))
+      )
+    (intern func))
+  )
+
+
+(defmacro write::make-write-spec (ob)
+  `
+  (let ((code 
+	 "KGZzZXQgCiAgICAgICMnKGxhbWJkYSAoc3RyaW5nKQoJICAoZm9ybWF0LXNwZWMgc3RyaW5nCgkJ
+ICAgICAgIGAoKD9hIC4gLChhbGlzdC1nZXQgJ2FsaWFzIG9iKSkKCQkJICg/cCAuICwoYWxpc3Qt
+Z2V0ICdwYXRoIG9iKSkKCQkJICg/ZiAuICwoYWxpc3QtZ2V0ICdzY2hlbWEgb2IpKQoJCQkgKD9l
+IC4gLChhbGlzdC1nZXQgJ2V4dGVuc2lvbiBvYikpCgkJCSAoP2kgLiAsKGFsaXN0LWdldCAnaWRl
+bnRpZmllciBvYikpCgkJCSAoP2IgLiAsKGFsaXN0LWdldCAnaWRlbnRpZmllciBvYikpCgkJCSAp
+KQoJICApCiAgICAgICkK"
+	 )
+	(func (symbol-name (gensym "write-spec-")))
+	(replace (format "%S" ob))
+	)
+    (with-temp-buffer
+      (insert (base64-decode-string code))
+      (goto-char (point-min))
+      (goto-char 7)
+      (insert (format "'%S" (intern func)))
+      (perform-replace "ob"
+		       replace
+		       nil nil nil)
+      (message "body: %s" (buffer-string))
+      (eval-region (point-min) (point-max))
+      )
+    (intern func))
+  )
+
+		 ;; (find-file
+		 ;;  (car (last (directory-files
+		 ;; 	      ,(alist-get 'path obj)
+		 ;; 	      t
+		 ;; 	      (format "\\%s%s$" ,(alist-get 'identifier obj) ,(alist-get 'extension obj))))
+		 ;;       ))
+
+
+
+
+(defun write--jump-to-write (ob &optional file)
+  ;; (let ((spec (make-spec nil `((?p . ,(alist-get 'path ob))
+  ;; 			       (?a . ,(alist-get 'alias ob))
+  ;; 			       ))))
+  ;;   (funcall (intern-soft (symbol-name spec)) "%a")
+  ;;   )
+
+  (funcall (make-spec nil `((?p . ,(alist-get (quote path) ob))
+			    (?a . ,(alist-get (quote alias) ob))
+			    ))
+	   "%p"
+	   )
+  
+  
+  
+  ;; (let* (
+  ;; 	 (write (car ob))
+  ;; 	 (path (alist-get 'path ob))
+  ;; 	 (alias (alist-get 'alias ob))
+  ;; 	 (format (alist-get 'schema ob))
+  ;; 	 (extension (alist-get 'extension ob))
+  ;; 	 (identifier (alist-get 'identifier ob))
+  ;; 	 (behaviour (alist-get 'behaviour ob))
+  ;; 	 (assumed (concat
+  ;; 		   path
+  ;; 		   (if (or current-prefix-arg behaviour)
+  ;; 		       (kill-new (read-string "Title: "))
+  ;; 		     (format-time-string format))
+  ;; 		   identifier
+  ;; 		   extension
+  ;; 		   ))
+  ;; 	 )
+  
+  ;;   (with-current-buffer (find-file assumed)
+  ;;     (setq-local write-path path)
+  ;;     (run-hooks global-write-select-hook)
+  ;;     (run-hooks (intern (format "%s-select-hook" write)))
+  ;;     )
+
+  ;;   ;; (if file
+  ;;   ;; 	(with-current-buffer (find-file file)
+  ;;   ;; 	  (setq-local write-path path)
+  ;;   ;; 	  (run-hooks global-write-select-hook)
+  ;;   ;; 	  (run-hooks (intern (format "%s-select-hook" write)))
+  ;;   ;; 	  )
+  ;;   ;;   )
+  
+  ;;   )
+  )
+
+     ;; ;; Create a function that gets the nth child from current write of write
+     ;; (eval `(fset
+     ;; 	     (intern ,(format "l%s" (alist-get 'alias obj)))
+     ;; 	     (lambda (&optional arg)
+     ;; 	       (interactive "P")
+     ;; 	       ;; Another way of checking if we're in a write buffer
+     ;; 	       ;; is to check for the existence of write local
+     ;; 	       ;; variables
+     ;; 	       (let* ((func (symbol-function (intern ,(format "get-%ss" (car obj)))))
+     ;; 		      (coll (funcall func))
+     ;; 		      (curr (or
+     ;; 			     (and (boundp 'write-path) (buffer-file-name))
+     ;; 			     (car (last coll))
+     ;; 			     ))
+     ;; 		      (currpos (-elem-index curr coll))
+     ;; 		      (newpos (nth (1- currpos) coll)))
+
+     ;; 		 (find-file newpos)
+		 
+     ;; 		 (message "Truth: %s" (boundp 'write-path))
+     ;; 		 (message "Current Buffer: %s" curr)
+     ;; 		 (message "Current Position: %s (%s)" currpos (nth currpos coll))
+     ;; 		 (message "New Position: %s" newpos)
+		 
+     ;; 		 )
+     ;; 	       )
+     ;; 	     ))
+       (let ((obspec (make-spec nil
+			   `((?w . ,(car ob))
+			     (?p . ,(alist-get 'path ob))
+			     (?a . ,(alist-get 'alias ob))
+			     (?f . ,(alist-get 'format ob))
+			     (?e . ,(alist-get 'extension ob))
+			     (?i . ,(alist-get 'identifier ob))
+			     (?b . ,(alist-get 'behaviour ob)))
+			   )))
+    
+    (funcall obspec "%p%a%e")
+    (message "%s" ob)
+    )
+
+
+;; (eval `(fset
+;; 	     (intern ,(format "l%s" (alist-get 'alias obj)))
+;; 	     (lambda (&optional arg)
+;; 	       (interactive "P")
+;; 	       ;; Another way of checking if we're in a write buffer
+;; 	       ;; is to check for the existence of write local
+;; 	       ;; variables
+;; 	       (let* ((func (symbol-function (intern ,(format "get-%ss" (car obj)))))
+;; 		      (coll (funcall func))
+;; 		      (curr (or
+;; 			     (and
+;; 			      (string= (file-name-directory (buffer-file-name)) ,(expand-file-name (alist-get 'path obj))) (buffer-file-name))
+;; 			     (car (last coll))
+;; 			     ))
+;; 		      (currpos (-elem-index curr coll))
+;; 		      (newpos (nth (1- currpos) coll)))
+		 
+;; 		 (write--jump-to-write nil newpos)
+		 
+;; 		 ;;(message "Truth: %s" (boundp 'write-path))
+;; 		 (message "Current Buffer: %s" curr)
+;; 		 (message "Current Position: %s (%s)" currpos (nth currpos coll))
+;; 		 (message "New Position: %s" newpos)
+		 
+;; 		 )
+;; 	       )
+;; 	     ))
+
+(defun last-meta (&optional arg)
+  (interactive "P")
+  (let* ((func (symbol-function 'get-metas))
+	 (coll (funcall func))
+	 (curr
+	  (or
+	   (and (string= (file-name-directory (or (buffer-file-name) "")) "e:/w/")
+		(nth (- (-elem-index (buffer-file-name) coll) (or arg 1)) coll))
+	   (car (last coll)))
+	  )
+	 )
+    (find-file curr)
+    )
+  )
+ 
+(defalias 'lm #'last-meta)
+
+
+(defmacro write--intern-write-up (obj)
+  `(progn
+     (intern (format "%s-select-hook" (car ,obj)))
+     ;; Creating a function that gets all the children of write
+     (eval `(fset
+	     (intern
+	      ,(format "get-%ss" (car ,obj)))
+	     (lambda ()
+	       (interactive)
+	       (directory-files
+		,(alist-get 'path obj)
+		t
+		(format "\\%s%s$" ,(alist-get 'identifier obj) ,(alist-get 'extension obj)) nil nil)
+	       )))
+     ;; Last relative write
+     (eval `(fset
+	     (intern ,(format "l%s" (alist-get 'alias obj)))
+	     (lambda (&optional arg)
+	       (interactive "P")
+	       (let* ((func (symbol-function (intern ,(format "get-%ss" (car obj)))))
+		      (coll (funcall func))
+		      (curr
+		       (or
+			(and (string= (file-name-directory (or (buffer-file-name) "")) (expand-file-name ,(alist-get 'path obj)))
+			     (nth (- (-elem-index (buffer-file-name) coll) (or arg 1)) coll))
+			(car (last coll arg)))
+		       )
+		      )
+		 (write--jump-to-write nil curr)
+		 )
+	       )
+	     ))
+     ;; Creating alias
+     (eval `(fset
+	     (intern ,(alist-get 'alias obj))
+	     (lambda ()
+	       (interactive)
+	       (write--jump-to-write (quote ,obj))
+	       )))
+     ))
+
+
+     ;; Creating a function that gets all the children of write
+     (eval `(fset
+	     (intern
+	      ,(format "get-%ss" (car ,obj)))
+	     (lambda ()
+	       (interactive)
+	       (directory-files
+		,(alist-get 'path obj)
+		t
+		(format "\\%s%s$" ,(alist-get 'identifier obj) ,(alist-get 'extension obj)) nil nil)
+	       )))
+     ;; Last relative write
+     (eval `(fset
+	     (intern ,(format "l%s" (alist-get 'alias obj)))
+	     (lambda (&optional arg)
+	       (interactive "P")
+	       (let* ((func (symbol-function (intern ,(format "get-%ss" (car obj)))))
+		      (coll (funcall func))
+		      (curr
+		       (or
+			(and (string= (file-name-directory (or (buffer-file-name) "")) (expand-file-name ,(alist-get 'path obj)))
+			     (nth (- (-elem-index (buffer-file-name) coll) (or arg 1)) coll))
+			(car (last coll arg)))
+		       )
+		      )
+		 (write--jump-to-write nil curr)
+		 )
+	       )
+	     ))
+
+
+(defmacro make-spec (name alist)
+  `(let ((func (if (null ,name)
+		   (intern (make-temp-name "s"))
+		 (intern ,name))))
+     (fset
+      func
+      (lambda (string)
+	(format-spec string
+		     ,alist)))
+     func))
+;; (defun terms--sort-by-occurence ()
+;;   (interactive)
+;;   (setq-local tabulated-list-entries
+;; 	      (sort
+;; 	       tabulated-list-entries
+;; 	       #'(lambda (a b)
+;; 		   (> (string-to-number (aref (cadr a) 2))
+;; 		      (string-to-number (aref (cadr b) 2)))
+;; 		   )
+;; 	       ))
+;;   (revert-buffer)
+;;   (goto-char (point-min)))

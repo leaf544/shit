@@ -1,0 +1,45 @@
+{
+    "meta": {
+	"path": "~/w/",
+	"alias": "d",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".m"
+    },
+    "journal": {
+	"path": "~/j/",
+	"alias": "j",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".j"
+    },
+    "article": {
+	"path": "~/a/",
+	"alias": "a",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".a",
+	"behaviour": 1
+    },
+    "prod": {
+	"path": "~/prod/",
+	"alias": "p",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".p"
+    },
+    "grind": {
+	"path": "~/grind/",
+	"alias": "g",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".g"
+    },
+    "schizo": {
+	"path": "~/schizo/",
+	"alias": "s",
+	"schema": "%Y-%m-%d",
+	"extension": ".org",
+	"identifier": ".s"
+    },
+}

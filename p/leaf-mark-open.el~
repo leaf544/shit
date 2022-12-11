@@ -1,0 +1,64 @@
+;; --- * leaf-mark-open.el * ---
+
+;; Created: 7/7/2022
+
+(defvar mark-file (concat user-emacs-directory "marked")
+  "Where marked files are stored.")
+
+(defun get-living-buffers ()
+  "Return a list of file buffers"
+  (seq-filter
+   (lambda (b)
+     (buffer-file-name b))
+   (buffer-list)))
+
+(defun get-window-buffers ()
+  "Return a list of window buffers"
+  (seq-filter
+   (lambda (elt)
+     (memq elt (mapcar 'window-buffer (window-list))))
+   (buffer-list)))
+
+(mapc #'leaf/mark-buffer-file (get-window-buffers))
+
+(defmacro write-to-mark (obj append)
+  `(write-region ,obj nil mark-file ,append))
+
+(defmacro refun (name args &rest body)
+  `(defun ,name (,@args)
+     (interactive)
+     ,@body
+     (and current-prefix-arg (restart-emacs))))
+
+(refun leaf/mark-buffer-file (obj)
+       (write-to-mark (concat (buffer-file-name obj) "\n") t))
+
+(refun leaf/mark-directory (obj)
+       (write-to-mark (concat default-directory "\n") t))
+
+(refun leaf/mark-living-buffers (obj) 
+       (mapc #'leaf/mark-buffer-file (get-living-buffers)))
+
+(refun leaf/mark-window-buffers (obj)
+  (mapc #'leaf/mark-buffer-file (get-window-buffers)))
+
+(defun mark-open-procedure-default-function ()
+  (let ((list
+	 (with-temp-buffer
+	   (insert-file-contents mark-file)
+	   (split-string (buffer-string) "\n" t))))
+    (and list
+	 (progn
+	   (mapc #'find-file list)
+	   (write-to-mark "" nil)))))
+
+(defvar mark-open-procedure
+  #'mark-open-procedure-default-function
+  "Standard instruction set for leaf-mark-open")
+
+(defalias 'mf #'leaf/mark-buffer-file)
+(defalias 'md #'leaf/mark-directory)
+(defalias 'mlb #'leaf/mark-living-buffers)
+(defalias 'mw #'leaf/mark-window-buffers)
+
+(provide 'leaf-mark-open)

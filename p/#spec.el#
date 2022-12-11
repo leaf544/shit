@@ -1,0 +1,100 @@
+KGZzZXQgCiAgICAgICMnKGxhbWJkYSAoc3RyaW5nKQoJICAoZm9ybWF0LXNwZWMgc3RyaW5nCgkJ
+ICAgICAgIGAoKD9hIC4gLChhbGlzdC1nZXQgJ2FsaWFzIG9iKSkKCQkJICg/cCAuICwoYWxpc3Qt
+Z2V0ICdwYXRoIG9iKSkKCQkJICg/ZiAuICwoYWxpc3QtZ2V0ICdmb3JtYXQgb2IpKQoJCQkgKD9l
+IC4gLChhbGlzdC1nZXQgJ2V4dGVuc2lvbiBvYikpCgkJCSAoP2kgLiAsKGFsaXN0LWdldCAnaWRl
+bnRpZmllciBvYikpCgkJCSApKQoJICApCiAgICAgICkK
+
+KGZzZXQgCiAgICAgICMnKGxhbWJkYSAoc3RyaW5nKQoJICAoZm9ybWF0LXNwZWMgc3RyaW5nCgkJ
+ICAgICAgIGAoKD9hIC4gLChhbGlzdC1nZXQgJ2FsaWFzIG9iKSkKCQkJICg/cCAuICwoYWxpc3Qt
+Z2V0ICdwYXRoIG9iKSkKCQkJICg/ZiAuICwoYWxpc3QtZ2V0ICdmb3JtYXQgb2IpKQoJCQkgKD9l
+IC4gLChhbGlzdC1nZXQgJ2V4dGVuc2lvbiBvYikpCgkJCSAoP2kgLiAsKGFsaXN0LWdldCAnaWRl
+bnRpZmllciBvYikpCgkJCSApKQoJICApCiAgICAgICkK
+
+(fset write-spec46
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(fset 'write-spec47
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(fset write-spec49
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(fset write-spec49
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(fset write-spec49
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(fset 'write-spec54
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias '((path . "at"))))
+			 (?p . ,(alist-get 'path '((path . "at"))))
+			 (?f . ,(alist-get 'format '((path . "at"))))
+			 (?e . ,(alist-get 'extension '((path . "at"))))
+			 (?i . ,(alist-get 'identifier '((path . "at"))))
+			 ))
+	  )
+      )
+
+(func (symbol-name (gensym "write-spec-")))
+(func (symbol-name (gensym "write-spec-")))
+
+
+(func (symbol-name (gensym "write-spec-")))
+(fset 
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,(alist-get 'alias ob))
+			 (?p . ,(alist-get 'path ob))
+			 (?f . ,(alist-get 'format ob))
+			 (?e . ,(alist-get 'extension ob))
+			 (?i . ,(alist-get 'identifier ob))
+			 ))
+	  )
+      )

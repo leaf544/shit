@@ -1,0 +1,50 @@
+(defvar clean-alist
+  '(
+    ("c:/Users/leaf/Downloads" .
+     ((".pdf" . "~/pdf/")
+      (".txt" . "~/txt/")
+      )
+     )
+    ("c:/Users/leaf/Desktop" .
+     ((".pdf" . "~/pdf/")
+      (".txt" . "~/txt/"))
+     )
+    )
+  )
+
+(defun lambda-form (string)
+  (let ((vector (make-list (string-width string) 0))
+	(iter 0))
+    (seq-doseq (char string)
+      (setf (nth iter vector) char)
+      (cl-incf iter))
+    vector))
+
+(defmacro construct-kmacro-lambda-form (extension where)
+  `[?* ?% ,@(lambda-form extension) return ?R ,@(lambda-form where) return])
+
+(defun clean::clean-with-alist (alist)
+  (dolist (e clean-alist)
+    (with-current-buffer (find-file (car e))
+      (dolist (o (cdr e))
+	(eval
+	 `(progn
+	    (funcall
+	     (kmacro-lambda-form
+	      (construct-kmacro-lambda-form
+	       ,(car o)
+	       ,(cdr o))
+	      0
+	      "%d")
+	     )
+	    ))
+
+	)
+      (kill-buffer (current-buffer))
+      )
+    )
+  )
+
+(clean::clean-with-alist clean-alist)
+
+(provide 'leaf-clean)

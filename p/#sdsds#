@@ -1,0 +1,31 @@
+sdksldksld s
+d
+ s
+ d s
+ d s
+
+(fset (intern "write-spec41")
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,((alist-get 'alias '((path . "at")))))
+			 (?p . ,((alist-get 'path '((path . "at")))))
+			 (?f . ,((alist-get 'format '((path . "at")))))
+			 (?e . ,((alist-get 'extension '((path . "at")))))
+			 (?i . ,((alist-get 'identifier '((path . "at")))))
+			 ))
+	  )
+      )
+
+(fset (intern "write-spec41")
+      #'(lambda (string)
+	  (format-spec string
+		       `((?a . ,((alist-get 'alias '((path . "at")))))
+			 (?p . ,((alist-get 'path '((path . "at")))))
+			 (?f . ,((alist-get 'format '((path . "at")))))
+			 (?e . ,((alist-get 'extension '((path . "at")))))
+			 (?i . ,((alist-get 'identifier '((path . "at")))))
+			 ))
+	  )
+      )
+
+(write-spec41 "$p")
